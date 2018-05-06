@@ -1,0 +1,99 @@
+.create-account-header {
+  height: 8rem;
+  padding-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-account-logo-link {
+  height: 100%;
+}
+
+.create-account-logo {
+  height: 100%;
+}
+.terms-of-use__title {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.terms-of-use {
+  width: inherit;
+  text-align: center;
+  padding: 0;
+}
+
+.terms-of-use__copy {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.74);
+  text-align: center;
+  padding: 0 2.3rem;
+  line-height: 1.4rem;
+}
+
+.terms-of-use__copy:nth-last-of-type(1) {
+  margin-bottom: 0.5rem;
+}
+
+.terms-of-use__copy > strong {
+  color: white;
+}
+
+.next-button {
+  color: white;
+  font-weight: bold;
+  background-color: rgb(224, 158, 127);
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.i-agree-button {
+  color: white;
+  /* font-weight: bold; */
+  background-color: rgb(100, 100, 128);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.create-account-form {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.create-account__submission__copy {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.74);
+  text-align: center;
+  padding: 0 2.3rem;
+  line-height: 1.4rem;
+}
+
+.create-account-form__container {
+  text-align: center;
+}
+
+.create-account-form__container > a {
+  display: inline-block;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.okay-button {
+  color: white;
+  background-color: rgb(133, 170, 84);
+}
+
+input[type=date] {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.test-button {
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}

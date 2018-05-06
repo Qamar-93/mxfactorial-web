@@ -1,0 +1,35 @@
+language: node_js
+node_js:
+  - 8
+dist: trusty
+addons:
+  chrome: stable
+  apt:
+    packages:
+      # This is required to run new chrome on old trusty
+      - libnss3
+cache:
+  directories:
+    - node_modules
+script:
+  - npm test -- --coverage
+  - npm run build
+  - npm install -g serve
+  - serve --single --silent --port 3000 build &
+  - npm run e2e
+  - npm run coveralls
+deploy:
+  on:
+    branch: master
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  bucket: mxfactorial-web
+  # Prevent Travis from deleting build
+  skip_cleanup: true
+  # Upload build directory
+  local_dir: build
+after_deploy:
+  - aws configure set preview.cloudfront true
+  - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
+  - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_WWW_DISTRIBUTION_ID --paths "/*"

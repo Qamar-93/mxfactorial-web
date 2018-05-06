@@ -1,0 +1,56 @@
+.landing-screen-header {
+  height: 12rem;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-screen-logo {
+  height: 10rem;
+}
+
+.intro {
+  font-size: large;
+  color: rgba(255, 255, 255, 0.74);
+  text-align: center;
+  max-width: 75vh;
+  margin: auto;
+}
+
+.intro > a {
+  color: white;
+  padding: 0;
+  border-bottom: 2px solid white;
+}
+
+.auth {
+  margin: 3rem 0;
+  text-align: center;
+}
+
+hr {
+  display: block;
+  margin: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  max-width: 60vw;
+}
+
+.create-account {
+  background-color: rgb(100, 100, 128);
+  color: white;
+  font-weight: bold;
+}
+
+.sign-in {
+  background-color: rgb(63, 133, 199);
+  color: white;
+  font-weight: bold;
+}
+
+@media (min-width: 490px) {
+  hr {
+    width: 295px;
+  }
+}
