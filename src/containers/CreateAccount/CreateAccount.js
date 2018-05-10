@@ -17,11 +17,14 @@ import {
   CreateAccountForm6,
   CreateAccountForm7
 } from '../../components/CreateAccount/CreateAccountForms/'
-import { CREATE_ACCOUNT_URI, axiosRequest } from '../../dependencies/axios'
+//using cognitio sdk instead of /account/create api via axios
+import { createAccount } from '../../dependencies/cognito'
+// import { CREATE_ACCOUNT_URI, axiosRequest } from '../../dependencies/axios'
 import './CreateAccount.css'
 
 export const resetProfile = {
   account: '',
+  password: '',
   agrees: false,
   firstName: '',
   middleName: '',
@@ -116,15 +119,17 @@ export default class CreateAccount extends Component {
   handleCreateAccountRequest() {
     //temporary test if keys are present to
     //reduce api requests during development
-    if (Object.keys(this.state).length === 20) {
-      // console.log('Sending your data up..')
-      axiosRequest('post', CREATE_ACCOUNT_URI, this.state).then(result => {
-        if (result.status === 200) {
+    if (Object.keys(this.state).length > 19) {
+      createAccount(this.state).then(
+        // axiosRequest('post', CREATE_ACCOUNT_URI, this.state).then(result => {
+        result => {
           this.setState(resetProfile)
-        } else {
+          this.props.history.push('/account/create/10')
+        },
+        error => {
           alert('Request failed')
         }
-      })
+      )
     } else {
       alert('Please fill out all fields')
     }
@@ -211,7 +216,6 @@ export default class CreateAccount extends Component {
             render={props => (
               <CreateAccountForm6
                 {...props}
-                profileValueCount={Object.keys(this.state).length}
                 onChange={e => this.handleChange(e)}
                 show={() => this.showState()}
                 createAccount={() => this.handleCreateAccountRequest()}

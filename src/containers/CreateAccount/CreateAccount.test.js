@@ -1,24 +1,25 @@
 import React from 'react'
-import { shallow, mount } from 'enzyme'
-import { BrowserRouter, Route } from 'react-router-dom'
-jest.mock('../../dependencies/axios', () => {
+import { mount } from 'enzyme'
+import { MemoryRouter, Route } from 'react-router-dom'
+jest.mock('../../dependencies/cognito', () => {
   return {
-    axiosRequest: jest.fn(() => Promise.resolve({ status: 200 }))
+    createAccount: jest.fn(() => Promise.resolve({ status: 200 }))
   }
 })
-import * as axios from '../../dependencies/axios'
+import * as cognito from '../../dependencies/cognito'
 import CreateAccount from './CreateAccount'
 import { resetProfile, testProfile } from './CreateAccount'
 
 describe('CreateAccount component', () => {
   it('has agrees: false default state', () => {
+    const history = { push: jest.fn() }
     const agreesValue = false
     //Router required when rendering components with Link
     //then call .find() to return component under test
     const container = mount(
-      <BrowserRouter>
-        <CreateAccount />
-      </BrowserRouter>
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
     ).find(CreateAccount)
     const instance = container.instance()
     expect(instance.state.agrees).toBe(agreesValue)
@@ -26,10 +27,11 @@ describe('CreateAccount component', () => {
 
   it("records user's agreement", () => {
     const agreesValue = true
+    const history = { push: jest.fn() }
     const container = mount(
-      <BrowserRouter>
-        <CreateAccount />
-      </BrowserRouter>
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
     ).find(CreateAccount)
     const instance = container.instance()
     instance.agreeHandler()
@@ -37,6 +39,7 @@ describe('CreateAccount component', () => {
   })
 
   it('adds properties to state', () => {
+    const history = { push: jest.fn() }
     const mockEvent = {
       target: {
         name: 'firstName',
@@ -44,9 +47,9 @@ describe('CreateAccount component', () => {
       }
     }
     const container = mount(
-      <BrowserRouter>
-        <CreateAccount />
-      </BrowserRouter>
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
     ).find(CreateAccount)
     const instance = container.instance()
     instance.handleChange(mockEvent)
@@ -54,6 +57,7 @@ describe('CreateAccount component', () => {
   })
 
   it('converts input type to text', () => {
+    const history = { push: jest.fn() }
     const typeAfterHandlerCall = 'text'
     let mockEvent = {
       currentTarget: {
@@ -61,9 +65,9 @@ describe('CreateAccount component', () => {
       }
     }
     const container = mount(
-      <BrowserRouter>
-        <CreateAccount />
-      </BrowserRouter>
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
     ).find(CreateAccount)
     const instance = container.instance()
     instance.handleTypeToText(mockEvent)
@@ -71,6 +75,7 @@ describe('CreateAccount component', () => {
   })
 
   it('converts input type to date', () => {
+    const history = { push: jest.fn() }
     const typeAfterHandlerCall = 'date'
     let mockEvent = {
       currentTarget: {
@@ -78,9 +83,9 @@ describe('CreateAccount component', () => {
       }
     }
     const container = mount(
-      <BrowserRouter>
-        <CreateAccount />
-      </BrowserRouter>
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
     ).find(CreateAccount)
     const instance = container.instance()
     instance.handleTypeToDate(mockEvent)
@@ -88,15 +93,16 @@ describe('CreateAccount component', () => {
   })
 
   it('sends request to create account', async () => {
+    const history = { push: jest.fn() }
     const container = mount(
-      <BrowserRouter>
-        <CreateAccount />
-      </BrowserRouter>
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
     ).find(CreateAccount)
     const instance = container.instance()
     instance.setState(testProfile)
     instance.handleCreateAccountRequest()
-    await expect(axios.axiosRequest).toHaveBeenCalled()
+    await expect(cognito.createAccount).toHaveBeenCalled()
     expect(instance.state).toMatchObject(resetProfile)
   })
 })
