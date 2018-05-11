@@ -24,14 +24,14 @@ const LandingScreen = () => {
         <input className="account" type="text" placeholder="account" />
         <input className="password" type="password" placeholder="password" />
         <hr />
+        <button className="sign-in" type="submit">
+          Sign In
+        </button>
         <Link to="/account/create/1">
           <button className="create-account" type="submit">
             Create
           </button>
         </Link>
-        <button className="sign-in" type="submit">
-          Sign In
-        </button>
       </form>
     </div>
   )
