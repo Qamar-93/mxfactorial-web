@@ -1,0 +1,129 @@
+/* .home-icon {
+  padding: 1.1rem 0 1rem 0;
+  fill: white;
+} */
+
+.remove-icon {
+  position: relative;
+  right: 8rem;
+  bottom: 0.5rem;
+  fill: rgba(255, 255, 255, 0.575);
+  cursor: pointer;
+  padding: 0.1rem;
+}
+
+.home-screen-content {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+form {
+  text-align: center;
+}
+
+.indicator-container {
+  display: table;
+  margin: 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  /* text-align: cetner; */
+}
+
+.indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(184, 184, 184);
+  background-color: white;
+  padding: 0 1rem;
+  height: 2.5rem;
+  width: 15rem;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  font-size: 1.5rem;
+  box-shadow: 9px 9px 9px 1px rgba(92, 92, 95, 0.2);
+}
+
+.sum-transaction-item-value-display-cell {
+  color: black;
+}
+
+.debit-credit-buttons {
+  box-shadow: 9px 9px 9px 1px rgba(92, 92, 95, 0.2);
+  max-width: 15rem;
+  margin: 0 auto;
+}
+
+button.debit-button,
+button.credit-button {
+  background-color: rgb(75, 124, 180);
+  border: none;
+  height: 3rem;
+  /* color: white; */
+  font-size: 1.5rem;
+}
+
+button.debit-button:focus,
+button.credit-button:focus {
+  box-shadow: none;
+  background-color: rgb(75, 124, 180);
+}
+
+button.inactive {
+  background-color: rgb(202, 201, 201) !important;
+  color: rgb(238, 235, 235);
+}
+
+.add-item {
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.801);
+  /* font-weight: bold; */
+  background-color: rgb(161, 115, 175);
+}
+
+button.add-item:focus {
+  outline: none;
+}
+
+.credit-button-icon {
+  fill: rgb(255, 255, 255);
+}
+
+.debit-button-icon {
+  fill: rgb(255, 255, 255);
+}
+
+.add-item-icon {
+  fill: rgba(255, 255, 255, 0.801);
+}
+
+.transact {
+  margin-top: 1.5rem;
+  color: white;
+  background-color: rgb(124, 185, 124);
+}
+
+.request {
+  margin-top: 1.5rem;
+  color: white;
+  background-color: rgb(235, 172, 122);
+}
+
+.button-theme.request:focus {
+  outline: none;
+}
+
+.button-theme.transact:focus {
+  outline: none;
+}
+
+/* .mobile-nav {
+
+} */
+
+.mobile-nav__buttons {
+  padding: 0;
+  margin: 0;
+}

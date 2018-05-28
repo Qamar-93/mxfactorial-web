@@ -7,37 +7,40 @@ const CreateAccountForm6 = props => {
       <form className="create-account-form">
         <input
           name="account"
+          className="input-theme"
           type="text"
           onChange={props.onChange}
           placeholder="account"
         />
         <input
           name="password"
+          className="input-theme"
           type="password"
           onChange={props.onChange}
           placeholder="password"
         />
         <input
           name="emailAddress"
+          className="input-theme"
           type="email"
           onChange={props.onChange}
           placeholder="email"
         />
         <button
           type="button"
-          className="next-button"
+          className="button-theme next-button"
           onClick={props.createAccount}
         >
           Submit
         </button>
       </form>
       {/* <div>
-        <button className="test-button" onClick={props.show}>
+        <button className="button-theme test-button" onClick={props.show}>
           Show State
         </button>
       </div> */}
       {/* <div>
-        <button className="test-button" onClick={props.populate}>
+        <button className="button-theme test-button" onClick={props.populate}>
           Populate State
         </button>
       </div> */}

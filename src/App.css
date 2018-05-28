@@ -1,7 +1,5 @@
-input, button {
+.input-theme, .button-theme {
   text-align: center;
-  display: inline-block;
-  /* margin: 0 auto; */
   padding: 0 1rem;
   border-radius: 3px;
   margin-bottom: 1rem;
@@ -13,20 +11,20 @@ input, button {
   box-shadow: 9px 9px 9px 1px rgba(92, 92, 95, 0.2);
 }
 
-button {
+.button-theme {
   cursor: pointer;
 }
 
-input {
+.input-theme {
   background-color: white;
   cursor: text;
 }
 
-input:focus {
+.input-theme:focus {
   color: rgb(131, 131, 131);
 }
 
-input:focus::-webkit-input-placeholder {
+.input-theme:focus::-webkit-input-placeholder {
   color: transparent;
 }
 

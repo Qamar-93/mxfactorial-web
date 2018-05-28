@@ -1,7 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 
-import LandingScreen from './LandingScreen'
+import LandingScreen from '../LandingScreen'
 
 describe('Landing Screen component', () => {
   it("displays 'Demo web client...' copy", () => {

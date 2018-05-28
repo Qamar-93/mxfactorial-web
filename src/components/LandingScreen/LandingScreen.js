@@ -21,14 +21,25 @@ const LandingScreen = () => {
         </a>.
       </p>
       <form className="auth">
-        <input className="account" type="text" placeholder="account" />
-        <input className="password" type="password" placeholder="password" />
+        <input
+          className="input-theme account"
+          type="text"
+          placeholder="account"
+        />
+        <input
+          className="input-theme password"
+          type="password"
+          placeholder="password"
+        />
         <hr />
-        <button className="sign-in" type="submit">
-          Sign In
-        </button>
+        {/*temporarily adding link to home screen prior to auth*/}
+        <Link to="/account">
+          <button className="button-theme sign-in" type="submit">
+            Sign In
+          </button>
+        </Link>
         <Link to="/account/create/1">
-          <button className="create-account" type="submit">
+          <button className="button-theme create-account" type="submit">
             Create
           </button>
         </Link>

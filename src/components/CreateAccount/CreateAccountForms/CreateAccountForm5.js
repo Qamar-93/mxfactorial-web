@@ -11,29 +11,31 @@ const CreateAccountForm5 = props => (
         onFocus={props.typeToDate}
         onBlur={props.typeToText}
         onChange={props.onChange}
-        className="date-of-birth"
+        className="input-theme date-of-birth"
         placeholder="Date of birth"
       />
       <input
         name="industryName"
+        className="input-theme"
         type="text"
         onChange={props.onChange}
         placeholder="Industry"
       />
       <input
         name="occupationName"
+        className="input-theme"
         type="text"
         onChange={props.onChange}
         placeholder="Occupation"
       />
       <Link to="/account/create/9">
-        <button type="button" className="next-button">
+        <button type="button" className="button-theme next-button">
           Next
         </button>
       </Link>
     </form>
     {/* <div>
-      <button className='test-button'
+      <button className='button-theme test-button'
         onClick={props.show}
       >Test</button>
     </div> */}

@@ -4,12 +4,14 @@ import './App.css'
 
 import LandingScreen from './components/LandingScreen/LandingScreen'
 import CreateAccount from './containers/CreateAccount/CreateAccount'
+import { HomeScreen } from './containers/HomeScreen/HomeScreen'
 
 const App = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/" component={LandingScreen} />
       <Route path="/account/create/" component={CreateAccount} />
+      <Route path="/account" component={HomeScreen} />
     </Switch>
   </BrowserRouter>
 )

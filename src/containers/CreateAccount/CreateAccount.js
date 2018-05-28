@@ -18,8 +18,7 @@ import {
   CreateAccountForm7
 } from '../../components/CreateAccount/CreateAccountForms/'
 //using cognitio sdk instead of /account/create api via axios
-import { createAccount } from '../../dependencies/cognito'
-// import { CREATE_ACCOUNT_URI, axiosRequest } from '../../dependencies/axios'
+import { Cognito } from '../../dependencies/cognito'
 import './CreateAccount.css'
 
 export const resetProfile = {
@@ -48,6 +47,8 @@ export const resetProfile = {
 
 //Used in handlePopulateState() to avoid
 //manual testing 20 inputs
+//also used in ../../dependencies/__tests__/cognito.test.js
+//and ../../dependencies/__tests__/axios.test.js
 export const testProfile = {
   account: 'seventeen',
   agrees: true,
@@ -68,6 +69,7 @@ export const testProfile = {
   dateOfBirth: '2018-04-12',
   industryName: 'Fifteen',
   occupationName: 'Sixteen',
+  password: 'password',
   emailAddress: 'test@example.net'
 }
 
@@ -120,8 +122,9 @@ export default class CreateAccount extends Component {
     //temporary test if keys are present to
     //reduce api requests during development
     if (Object.keys(this.state).length > 19) {
-      createAccount(this.state).then(
-        // axiosRequest('post', CREATE_ACCOUNT_URI, this.state).then(result => {
+      const { account, password, agrees, ...profileData } = this.state
+      const cognitoInstance = new Cognito(account, password)
+      cognitoInstance.createAccount(profileData).then(
         result => {
           this.setState(resetProfile)
           this.props.history.push('/account/create/10')

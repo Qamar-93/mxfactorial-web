@@ -17,7 +17,7 @@ const TermsOfUseCopy1 = () => (
       offenses are common among its youth.
     </p>
     <Link to="/account/create/2">
-      <button type="submit" className="next-button">
+      <button type="submit" className="button-theme next-button">
         Next
       </button>
     </Link>
@@ -36,7 +36,7 @@ const TermsOfUseCopy2 = () => (
       that capital may continue to be acquired after producing nothing.
     </p>
     <Link to="/account/create/3">
-      <button type="submit" className="next-button">
+      <button type="submit" className="button-theme next-button">
         Next
       </button>
     </Link>
@@ -58,7 +58,11 @@ const TermsOfUseCopy3 = props => (
       measure.
     </p>
     <Link to="/account/create/4">
-      <button type="submit" onClick={props.agree} className="i-agree-button">
+      <button
+        type="submit"
+        onClick={props.agree}
+        className="button-theme i-agree-button"
+      >
         I Agree
       </button>
     </Link>

@@ -16,12 +16,12 @@ const CreateAccountForm7 = () => (
       authentication fails 3 times on the verification page.
     </p>
     <Link to="/account/create/1">
-      <button type="button" className="okay-button">
+      <button type="button" className="button-theme okay-button">
         Okay
       </button>
     </Link>
     {/* <div>
-      <button className='test-button'
+      <button className='button-theme test-button'
         onClick={props.show}
       >Test</button>
     </div> */}

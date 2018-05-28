@@ -1,144 +1,96 @@
-import { CognitoUserPool } from 'amazon-cognito-identity-js'
+import {
+  CognitoUserPool,
+  CognitoUser,
+  AuthenticationDetails
+} from 'amazon-cognito-identity-js'
 
-const poolData = {
+// import fetchIntercept from 'fetch-intercept'
+
+//used for logging cognito requests which, in turn,
+//structures their assertions in unit testing
+// fetchIntercept.register({
+//   request(url, config) {
+//     console.log(url)
+//     console.log(config)
+//     return [url, config]
+//   }
+// })
+
+const poolInfo = {
   UserPoolId: process.env.REACT_APP_COGNITO_POOL_ID || 'us-east-1_unit-test',
   ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID || 'unit-test'
 }
 
-const userPool = new CognitoUserPool(poolData)
-
-const createAccount = createAccountData => {
-  let attributeList = []
-  let validationData = null
-
-  const firstName = {
-    Name: `custom:firstName`,
-    Value: createAccountData.firstName
+class Cognito {
+  constructor(account, password, poolData = poolInfo) {
+    this.account = account
+    this.password = password
+    this.userPool = new CognitoUserPool(poolData)
   }
-  attributeList.push(firstName)
 
-  const middleName = {
-    Name: `custom:middleName`,
-    Value: createAccountData.middleName
+  createAccount(profileData) {
+    const attributeList = []
+    const validationData = null
+
+    Object.keys(profileData).forEach(key => {
+      attributeList.push({
+        Name: `custom:${key}`,
+        Value: profileData[key]
+      })
+    })
+
+    const cognitoAsync = new Promise((resolve, reject) => {
+      this.userPool.signUp(
+        this.account,
+        this.password,
+        attributeList,
+        validationData,
+        (err, result) => {
+          if (err) {
+            // console.log(err.message || JSON.stringify(err))
+            reject(err)
+            return
+          } else {
+            // console.log(result.getUsername() + ' was created')
+            resolve(result)
+            return
+          }
+        }
+      )
+    })
+    return cognitoAsync
   }
-  attributeList.push(middleName)
 
-  const lastName = {
-    Name: `custom:lastName`,
-    Value: createAccountData.lastName
-  }
-  attributeList.push(lastName)
+  authAccount() {
+    const authData = {
+      Username: this.account,
+      Password: this.password
+    }
 
-  const country = {
-    Name: `custom:country`,
-    Value: createAccountData.country
-  }
-  attributeList.push(country)
+    const authDetails = new AuthenticationDetails(authData)
 
-  const streetNumber = {
-    Name: `custom:streetNumber`,
-    Value: createAccountData.streetNumber
-  }
-  attributeList.push(streetNumber)
+    const accountData = {
+      Username: this.account,
+      Pool: this.userPool
+    }
 
-  const streetName = {
-    Name: `custom:streetName`,
-    Value: createAccountData.streetName
-  }
-  attributeList.push(streetName)
+    const cognitoAccount = new CognitoUser(accountData)
 
-  const floorNumber = {
-    Name: `custom:floorNumber`,
-    Value: createAccountData.floorNumber
-  }
-  attributeList.push(floorNumber)
-
-  const unit = {
-    Name: `custom:unit`,
-    Value: createAccountData.unit
-  }
-  attributeList.push(unit)
-
-  const cityName = {
-    Name: `custom:cityName`,
-    Value: createAccountData.cityName
-  }
-  attributeList.push(cityName)
-
-  const stateName = {
-    Name: `custom:stateName`,
-    Value: createAccountData.stateName
-  }
-  attributeList.push(stateName)
-
-  const postalCode = {
-    Name: `custom:postalCode`,
-    Value: createAccountData.postalCode
-  }
-  attributeList.push(postalCode)
-
-  const countryDialingCode = {
-    Name: `custom:countryDialingCode`,
-    Value: createAccountData.countryDialingCode
-  }
-  attributeList.push(countryDialingCode)
-
-  const areaCode = {
-    Name: `custom:areaCode`,
-    Value: createAccountData.areaCode
-  }
-  attributeList.push(areaCode)
-
-  const phoneNumber = {
-    Name: `custom:phoneNumber`,
-    Value: createAccountData.phoneNumber
-  }
-  attributeList.push(phoneNumber)
-
-  const dateOfBirth = {
-    Name: `custom:dateOfBirth`,
-    Value: createAccountData.dateOfBirth
-  }
-  attributeList.push(dateOfBirth)
-
-  const industryName = {
-    Name: `custom:industryName`,
-    Value: createAccountData.industryName
-  }
-  attributeList.push(industryName)
-
-  const occupationName = {
-    Name: `custom:occupationName`,
-    Value: createAccountData.occupationName
-  }
-  attributeList.push(occupationName)
-
-  const emailAddress = {
-    Name: `custom:emailAddress`,
-    Value: createAccountData.emailAddress
-  }
-  attributeList.push(emailAddress)
-
-  const cognitoAsync = new Promise((resolve, reject) => {
-    userPool.signUp(
-      createAccountData.account,
-      createAccountData.password,
-      attributeList,
-      validationData,
-      (err, result) => {
-        if (err) {
-          // console.log(err.message || JSON.stringify(err))
-          reject(err)
+    const token = new Promise((resolve, reject) => {
+      cognitoAccount.authenticateUser(authDetails, {
+        onSuccess: result => {
+          console.log(result)
+          resolve(result.getAccessToken().getJwtToken())
           return
-        } else {
-          // console.log(result.getUsername() + ' was created')
-          resolve(result)
+        },
+        onFailure: err => {
+          reject(JSON.stringify(err))
           return
         }
-      }
-    )
-  })
-  return cognitoAsync
+      })
+    })
+    return token
+  }
 }
 
-export { createAccount }
+export { Cognito }

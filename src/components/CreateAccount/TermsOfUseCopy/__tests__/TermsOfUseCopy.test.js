@@ -5,7 +5,7 @@ import {
   TermsOfUseCopy1,
   TermsOfUseCopy2,
   TermsOfUseCopy3
-} from './TermsOfUseCopy'
+} from '../TermsOfUseCopy'
 
 describe('Terms of Use components', () => {
   it('displays the first Terms of Use component', () => {

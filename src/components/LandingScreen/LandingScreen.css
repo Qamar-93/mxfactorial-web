@@ -18,10 +18,12 @@
   margin: auto;
 }
 
-.intro > a {
+.intro > a,
+.intro > a:hover {
   color: white;
   padding: 0;
   border-bottom: 2px solid white;
+  text-decoration: none;
 }
 
 .auth {

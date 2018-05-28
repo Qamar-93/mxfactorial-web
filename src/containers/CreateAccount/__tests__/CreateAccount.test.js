@@ -1,14 +1,16 @@
 import React from 'react'
 import { mount } from 'enzyme'
 import { MemoryRouter, Route } from 'react-router-dom'
-jest.mock('../../dependencies/cognito', () => {
+import CreateAccount from '../CreateAccount'
+import { resetProfile, testProfile } from '../CreateAccount'
+jest.mock('../../../dependencies/cognito')
+import { Cognito } from '../../../dependencies/cognito'
+const mockFunction = jest.fn().mockImplementation(() => Promise.resolve())
+Cognito.mockImplementation(() => {
   return {
-    createAccount: jest.fn(() => Promise.resolve({ status: 200 }))
+    createAccount: mockFunction
   }
 })
-import * as cognito from '../../dependencies/cognito'
-import CreateAccount from './CreateAccount'
-import { resetProfile, testProfile } from './CreateAccount'
 
 describe('CreateAccount component', () => {
   it('has agrees: false default state', () => {
@@ -102,7 +104,7 @@ describe('CreateAccount component', () => {
     const instance = container.instance()
     instance.setState(testProfile)
     instance.handleCreateAccountRequest()
-    await expect(cognito.createAccount).toHaveBeenCalled()
+    await expect(mockFunction).toHaveBeenCalled()
     expect(instance.state).toMatchObject(resetProfile)
   })
 })

@@ -1,0 +1,20 @@
+.transaction-item-set {
+  width: 15rem;
+  margin: 2rem auto 0 auto;
+  padding: 0;
+}
+
+.transaction-item-quantity {
+  display: block;
+  width: 6rem;
+  float: right;
+}
+
+label {
+  color: rgb(255, 255, 255);
+  text-align: left;
+  font-size: 1.5rem;
+  position: relative;
+  right: 0.5rem;
+  top: 0.2rem;
+}
