@@ -14,12 +14,6 @@ let page
 const waitOpts = { waitUntil: 'load' }
 
 beforeAll(async () => {
-  //in case previous attempt to
-  //delete test data failed
-  await axiosInstance
-    .delete('/account/TestAccount')
-    .then(res => err)
-    .catch(err => err)
   browser = await puppeteer.launch({
     args: ['--no-sandbox']
     //,headless: false //for visible browser test automation
@@ -30,6 +24,12 @@ beforeAll(async () => {
 test(
   'Create account in Cognito',
   async () => {
+    //in case previous attempt to delete test data failed
+    //positioned here because not caught by CI in beforeAll
+    await axiosInstance
+      .delete('/account/TestAccount')
+      .then(res => err)
+      .catch(err => err)
     await page.goto(BASE_URL)
     const createAccountButton = await page.$('.create-account')
     await createAccountButton.click()
