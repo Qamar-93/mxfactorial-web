@@ -2,20 +2,22 @@ language: node_js
 node_js:
   - 8
 dist: trusty
+sudo: required
 addons:
-  chrome: stable
+  chrome: beta
   apt:
     packages:
       # This is required to run new chrome on old trusty
       - libnss3
 before_install:
   # start your web application and listen on `localhost`
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost:3000 &
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 --no-sandbox --disable-setuid-sandbox http://localhost &
+
 cache:
   directories:
     - node_modules
 script:
-  - npm test -- --coverage
+  - npm run ci:start
   - npm run coveralls
   - npm run build
 deploy:

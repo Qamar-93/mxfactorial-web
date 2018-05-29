@@ -106,5 +106,5 @@ test(
       .then(res => expect(res.data).toBe('TestAccount'))
       .catch(err => err)
   },
-  15000
+  20000
 )
