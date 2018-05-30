@@ -85,11 +85,15 @@ class HomeScreen extends Component {
   }
 
   handleAddTransactionItem() {
+    const transactionItemPixelHeight = 215
     const newTransactionItem = this.handleCreateEmptyItem()
-    this.setState({
-      ...this.state,
-      transactionItems: [...this.state.transactionItems, newTransactionItem]
-    })
+    this.setState(
+      {
+        ...this.state,
+        transactionItems: [...this.state.transactionItems, newTransactionItem]
+      },
+      () => window.scrollBy(0, transactionItemPixelHeight)
+    )
   }
 
   handleAddAndRemoveTransactionItem() {
