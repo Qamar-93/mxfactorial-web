@@ -289,7 +289,7 @@ class HomeScreen extends Component {
               menuIsActive={this.state.menuIsActive}
             />
             <div className="mobile-nav__buttons" />
-            {this.state.menuIsActive ? <MobileNav /> : null}
+            {this.state.menuIsActive ? <MobileNav /> : ''}
           </nav>
         </footer>
       </div>
