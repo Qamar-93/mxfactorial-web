@@ -197,6 +197,14 @@ class HomeScreen extends Component {
           }
         >
           {this.state.menuIsActive ? <DisableScreen /> : ''}
+          <div className="account-container">
+            <div className="account-display">
+              <div className="account-label">account</div>
+              <div className="account-value">
+                <i>{'FirstMiddleLast'}</i>
+              </div>
+            </div>
+          </div>
           <div className="indicator-container">
             <span className="indicator debitor-account-balance-display-cell">
               balance

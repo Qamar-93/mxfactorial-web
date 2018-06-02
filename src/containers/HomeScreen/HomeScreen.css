@@ -3,15 +3,6 @@
   fill: white;
 } */
 
-.remove-icon {
-  position: relative;
-  right: 8rem;
-  bottom: 0.5rem;
-  fill: rgba(255, 255, 255, 0.575);
-  cursor: pointer;
-  padding: 0.1rem;
-}
-
 .home-screen-content {
   text-align: center;
   margin-top: 3rem;
@@ -21,12 +12,33 @@ form {
   text-align: center;
 }
 
+.account-display {
+  width: 15rem;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.account-display {
+  display: flex;
+  margin-bottom: 0.2rem;
+}
+
+.account-label {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.4);
+  text-shadow: 0.5px 0.5px rgba(92, 92, 95, 0.2);
+}
+
+.account-value {
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.76);
+  margin-left: auto;
+}
+
 .indicator-container {
   display: table;
   margin: 0 auto;
-  margin-top: 1rem;
   margin-bottom: 1.5rem;
-  /* text-align: cetner; */
 }
 
 .indicator {
@@ -73,6 +85,15 @@ button.credit-button:focus {
 button.inactive {
   background-color: rgb(202, 201, 201) !important;
   color: rgb(238, 235, 235);
+}
+
+.remove-icon {
+  position: relative;
+  right: 8rem;
+  bottom: 0.5rem;
+  fill: rgba(255, 255, 255, 0.575);
+  cursor: pointer;
+  padding: 0.1rem;
 }
 
 .add-item {

@@ -13,6 +13,18 @@ beforeAll(async () => {
   page = await browser.newPage()
 })
 
+test('1 account label displays', async () => {
+  const accountLabelCopy = 'account'
+  await page.goto(BASE_URL + '/account')
+  await page.waitForSelector('.add-item')
+  const accountIndicatorHandle = await page.$('.account-label')
+  const accountIndicatorHtml = await accountIndicatorHandle.getProperty(
+    'innerHTML'
+  )
+  const accountIndicatorCopy = await accountIndicatorHtml.jsonValue()
+  expect(accountIndicatorCopy).toBe(accountLabelCopy)
+})
+
 test('1 debitor-account-balance-display-cell displays', async () => {
   await page.goto(BASE_URL + '/account')
   await page.waitForSelector('.add-item')
