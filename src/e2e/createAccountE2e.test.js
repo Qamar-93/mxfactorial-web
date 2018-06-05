@@ -24,13 +24,14 @@ beforeAll(async () => {
 test(
   'Create account in Cognito',
   async () => {
+    const expectedResult = { deleted: 'TestAccount' }
     //in case previous attempt to delete test data failed
     //positioned here because not caught by CI in beforeAll
     await axiosInstance
       .delete('/account/TestAccount')
-      .then(res => err)
+      .then(res => res)
       .catch(err => err)
-    await page.goto(BASE_URL)
+    await page.goto(BASE_URL, waitOpts)
     const createAccountButton = await page.$('.create-account')
     await createAccountButton.click()
     await page.waitForSelector('.next-button')
@@ -100,11 +101,15 @@ test(
     await emailAddressInput.type('testabc@mailinator.com')
     const submitButton = await page.$('.next-button')
     await submitButton.click()
-    await page.waitForSelector('.okay-button')
-    await axiosInstance
+    await page.waitForSelector('.request') //necessary to avoid failed delete request next line
+    //src/components/CreateAccount/CreateAccountForms/CreateAccountForm7.js
+    //is temporarily commented out
+    // await page.waitForSelector('.okay-button')
+    const response = await axiosInstance
       .delete('/account/TestAccount')
-      .then(res => expect(res.data).toBe('TestAccount'))
+      .then(res => res.data)
       .catch(err => err)
+    expect(response).toMatchObject(expectedResult)
   },
   20000
 )
