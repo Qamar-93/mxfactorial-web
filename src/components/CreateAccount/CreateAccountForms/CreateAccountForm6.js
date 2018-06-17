@@ -44,6 +44,16 @@ const CreateAccountForm6 = props => {
           Populate State
         </button>
       </div> */}
+      {/* <div>
+        <button className="button-theme test-button" onClick={props.cognito}>
+          Show Tokens
+        </button>
+      </div> */}
+      {/* <div>
+        <button className="button-theme test-button" onClick={props.signOut}>
+          Sign Out
+        </button>
+      </div> */}
     </div>
   )
 }

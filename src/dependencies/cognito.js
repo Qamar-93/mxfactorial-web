@@ -3,6 +3,10 @@ import {
   CognitoUser,
   AuthenticationDetails
 } from 'amazon-cognito-identity-js'
+import {
+  COGNITO_CLIENT_ID,
+  COGNITO_POOL_ID
+} from '../utilities/envVarsFromDisk'
 
 // import fetchIntercept from 'fetch-intercept'
 
@@ -16,81 +20,96 @@ import {
 //   }
 // })
 
-const poolInfo = {
-  UserPoolId: process.env.REACT_APP_COGNITO_POOL_ID || 'us-east-1_unit-test',
-  ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID || 'unit-test'
+const poolData = {
+  UserPoolId: COGNITO_POOL_ID,
+  ClientId: COGNITO_CLIENT_ID
 }
 
-class Cognito {
-  constructor(account, password, poolData = poolInfo) {
-    this.account = account
-    this.password = password
-    this.userPool = new CognitoUserPool(poolData)
-  }
+const userPool = new CognitoUserPool(poolData)
 
-  createAccount(profileData) {
-    const attributeList = []
-    const validationData = null
+const createAccount = (account, password, profileData) => {
+  const attributeList = []
+  const validationData = null
 
-    Object.keys(profileData).forEach(key => {
-      attributeList.push({
-        Name: `custom:${key}`,
-        Value: profileData[key]
-      })
+  Object.keys(profileData).forEach(key => {
+    attributeList.push({
+      Name: `custom:${key}`,
+      Value: profileData[key]
     })
+  })
 
-    const cognitoAsync = new Promise((resolve, reject) => {
-      this.userPool.signUp(
-        this.account,
-        this.password,
-        attributeList,
-        validationData,
-        (err, result) => {
-          if (err) {
-            // console.log(err.message || JSON.stringify(err))
-            reject(err)
-            return
-          } else {
-            // console.log(result.getUsername() + ' was created')
-            resolve(result)
-            return
-          }
-        }
-      )
-    })
-    return cognitoAsync
-  }
-
-  authAccount() {
-    const authData = {
-      Username: this.account,
-      Password: this.password
-    }
-
-    const authDetails = new AuthenticationDetails(authData)
-
-    const accountData = {
-      Username: this.account,
-      Pool: this.userPool
-    }
-
-    const cognitoAccount = new CognitoUser(accountData)
-
-    const token = new Promise((resolve, reject) => {
-      cognitoAccount.authenticateUser(authDetails, {
-        onSuccess: result => {
-          console.log(result)
-          resolve(result.getAccessToken().getJwtToken())
+  const cognitoAsync = new Promise((resolve, reject) => {
+    userPool.signUp(
+      account,
+      password,
+      attributeList,
+      validationData,
+      (err, result) => {
+        if (err) {
+          // console.log(err.message || JSON.stringify(err))
+          reject(err)
           return
-        },
-        onFailure: err => {
-          reject(JSON.stringify(err))
+        } else {
+          // console.log(result.getUsername() + ' was created')
+          resolve(result)
           return
         }
-      })
-    })
-    return token
-  }
+      }
+    )
+  })
+  return cognitoAsync
 }
 
-export { Cognito }
+const authAccount = (account, password) => {
+  const authData = {
+    Username: account,
+    Password: password
+  }
+
+  const authDetails = new AuthenticationDetails(authData)
+  // console.log(authDetails)
+
+  const accountData = {
+    Username: account,
+    Pool: userPool
+  }
+
+  const cognitoAccount = new CognitoUser(accountData)
+
+  const token = new Promise((resolve, reject) => {
+    cognitoAccount.authenticateUser(authDetails, {
+      onSuccess: result => {
+        // console.log(result)
+        resolve(result.getAccessToken().getJwtToken())
+        return
+      },
+      onFailure: err => {
+        reject(JSON.stringify(err))
+        return
+      }
+    })
+  })
+  return token
+}
+
+const clearCachedCognitoTokens = () => {
+  //https://github.com/aws/aws-amplify/blob/0dad34c273dd82438e23da0d8bbb4a978fddf2de/packages/amazon-cognito-identity-js/lib/CognitoUser.js#L1344-L1355
+  //clearCachedTokens() from cognito sdk fails. custom purge of localStorage:
+  let keysOnStorage = Object.keys(localStorage)
+  const cognitoISPKey = `CognitoIdentityServiceProvider.${COGNITO_CLIENT_ID}`
+  let cognitoFiltered = []
+  //filter CognitoIdentityServiceProvider localStorage keys
+  for (let i = 0; i < keysOnStorage.length; i++) {
+    const indexISP = keysOnStorage[i].indexOf(cognitoISPKey)
+    if (indexISP >= 0) {
+      cognitoFiltered.push(keysOnStorage[i])
+    }
+  }
+  //remove CognitoIdentityServiceProvider keys from localStorage
+  for (let k = 0; k < cognitoFiltered.length; k++) {
+    localStorage.removeItem(cognitoFiltered[k])
+  }
+  // console.log(`localStorage length is ${localStorage.length}`)
+}
+
+export { createAccount, authAccount, clearCachedCognitoTokens }

@@ -149,27 +149,45 @@ test('0 test elements on /account/create/9 (CreateAccountForm6)', async () => {
   expect(testButtons).toBe(0)
 })
 
-test('0 test elements on /account/create/10 (CreateAccountForm7)', async () => {
-  await page.goto(BASE_URL + '/account/create/10')
-  const inputCount = await page.$$eval('input', inputs => inputs.length)
-  const buttonCount = await page.$$eval('button', buttons => buttons.length)
-  const testButtons = await page.$$eval(
-    '.test-button',
-    testButtons => testButtons.length
-  )
-  expect(inputCount).toBe(0)
-  expect(buttonCount).toBe(1)
-  expect(testButtons).toBe(0)
-})
+// test('0 test elements on /account/create/10 (CreateAccountForm7)', async () => {
+//   await page.goto(BASE_URL + '/account/create/10')
+//   const inputCount = await page.$$eval('input', inputs => inputs.length)
+//   const buttonCount = await page.$$eval('button', buttons => buttons.length)
+//   const testButtons = await page.$$eval(
+//     '.test-button',
+//     testButtons => testButtons.length
+//   )
+//   expect(inputCount).toBe(0)
+//   expect(buttonCount).toBe(1)
+//   expect(testButtons).toBe(0)
+// })
 
 test('0 test elements on /account (CreateAccount)', async () => {
-  await page.goto(BASE_URL + '/account')
+  //begin sign in to access post-auth screens
+  await page.goto(BASE_URL)
+  await page.waitForSelector('.sign-in')
+  const accountInput = await page.$('[name=account]')
+  await accountInput.type('JoeSmith')
+  const passwordInput = await page.$('[name=password]')
+  await passwordInput.type('password')
+  const signInButton = await page.$('.sign-in')
+  await signInButton.click()
+  await page.waitForSelector('.add-item')
+  //end sign in
   const inputCount = await page.$$eval('input', inputs => inputs.length)
   const buttonCount = await page.$$eval('button', buttons => buttons.length)
   const testButtons = await page.$$eval(
     '.test-button',
     testButtons => testButtons.length
   )
+  //sign out to purge tokens and return to initial state for other tests
+  const hamburgerButton = await page.$('.hamburger')
+  await hamburgerButton.click()
+  await page.waitForSelector('.sign-out-button')
+  const signOutButton = await page.$('.sign-out-button')
+  await signOutButton.click()
+  await page.waitForSelector('.sign-in')
+  //end sign out
   expect(inputCount).toBe(4)
   expect(buttonCount).toBe(5)
   expect(testButtons).toBe(0)

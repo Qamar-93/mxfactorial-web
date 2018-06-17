@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Button, ButtonGroup } from 'reactstrap'
 import './HomeScreen.css'
@@ -9,26 +10,50 @@ import { TransactionItem } from '../../components/TransactionItem/TransactionIte
 import { AddIcon } from './AddIcon'
 import { SubtractIcon } from './SubtractIcon'
 import { Hamburger } from '../../components/Hamburger/Hamburger'
+import { COGNITO_CLIENT_ID } from '../../utilities/envVarsFromDisk'
+import { clearCachedCognitoTokens } from '../../dependencies/cognito'
 
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      currentAccount: '',
       menuIsActive: false,
       creditButtonIsActive: true,
       transactionItems: []
     }
+    this.windowListener = this.windowListener.bind(this)
+  }
+
+  componentWillMount() {
+    this.setState({ currentAccount: this.handleGetCurrentAccount() })
   }
 
   componentDidMount() {
     this.handleAddTransactionItem()
   }
 
+  windowListener(e) {
+    e.stopPropagation()
+    this.setState({
+      ...this.state,
+      menuIsActive: false
+    })
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener(
+      'click',
+      this.windowListener,
+      {
+        capture: true,
+        once: true
+      },
+      false
+    )
+  }
+
   handleNav() {
-    let opts = {
-      capture: true,
-      once: true
-    }
     if (!this.state.menuIsActive) {
       this.setState(
         {
@@ -38,14 +63,12 @@ class HomeScreen extends Component {
         () => {
           window.addEventListener(
             'click',
-            e => {
-              e.stopPropagation()
-              this.setState({
-                ...this.state,
-                menuIsActive: false
-              })
+            this.windowListener,
+            {
+              capture: true,
+              once: true
             },
-            opts
+            false
           )
         }
       )
@@ -172,12 +195,65 @@ class HomeScreen extends Component {
     })
   }
 
+  handleGetCurrentAccount() {
+    const keysOnStorage = Object.keys(localStorage)
+    let cognitoKeys = []
+    for (let i = 0; i < keysOnStorage.length; i++) {
+      const clientIdIndex = keysOnStorage[i].indexOf(COGNITO_CLIENT_ID)
+      if (clientIdIndex >= 0) {
+        //filter for tokens containing client id
+        cognitoKeys.push(keysOnStorage[i])
+      }
+    }
+    let lastAuthUserValue = []
+    for (let j = 0; j < cognitoKeys.length; j++) {
+      const lastAuthUserKey = `LastAuthUser`
+      const lastAuthUserIndex = cognitoKeys[j].indexOf(lastAuthUserKey)
+      if (lastAuthUserIndex >= 0) {
+        lastAuthUserValue.push(localStorage[cognitoKeys[j]])
+      }
+    }
+    //TODO: defensive code in case desiredCognitoAuthKey.length > 1 later
+    return lastAuthUserValue[0]
+  }
+
   //For testing
   showState() {
     console.log(this.state)
   }
 
+  //For testing
+  showToken() {
+    const keysOnStorage = Object.keys(localStorage)
+    let cognitoKeys = []
+    for (let i = 0; i < keysOnStorage.length; i++) {
+      const clientIdIndex = keysOnStorage[i].indexOf(COGNITO_CLIENT_ID)
+      if (clientIdIndex >= 0) {
+        //filter for tokens containing client id
+        cognitoKeys.push(keysOnStorage[i])
+      }
+    }
+    let tokenValue = []
+    for (let j = 0; j < cognitoKeys.length; j++) {
+      const tokenKey = `Token`
+      const tokenIndex = cognitoKeys[j].indexOf(tokenKey)
+      if (tokenIndex >= 0) {
+        tokenValue.push(localStorage[cognitoKeys[j]])
+      }
+    }
+    //TODO: defensive code in case desiredCognitoAuthKey.length > 1 later
+    return tokenValue[0]
+  }
+
+  handleSignOut() {
+    clearCachedCognitoTokens()
+    this.setState({ currentAccount: this.handleGetCurrentAccount() })
+  }
+
   render() {
+    if (!this.state.currentAccount) {
+      return <Redirect to="/" />
+    }
     //create condition to show 'total' or float
     const isZeroSum =
       this.state.transactionItems.reduce((accumulator, currentValue) => {
@@ -200,9 +276,7 @@ class HomeScreen extends Component {
           <div className="account-container">
             <div className="account-display">
               <div className="account-label">account</div>
-              <div className="account-value">
-                <i>{'FirstMiddleLast'}</i>
-              </div>
+              <div className="account-value">{this.state.currentAccount}</div>
             </div>
           </div>
           <div className="indicator-container">
@@ -284,6 +358,14 @@ class HomeScreen extends Component {
           {/* <div>
             <button
               className="button-theme test-button"
+              onClick={() => console.log(this.showToken())}
+            >
+              Show Token
+            </button>
+          </div> */}
+          {/* <div>
+            <button
+              className="button-theme test-button"
               onClick={() => this.showState()}
             >
               Show State
@@ -297,7 +379,11 @@ class HomeScreen extends Component {
               menuIsActive={this.state.menuIsActive}
             />
             <div className="mobile-nav__buttons" />
-            {this.state.menuIsActive ? <MobileNav /> : ''}
+            {this.state.menuIsActive ? (
+              <MobileNav signOut={() => this.handleSignOut()} />
+            ) : (
+              ''
+            )}
           </nav>
         </footer>
       </div>

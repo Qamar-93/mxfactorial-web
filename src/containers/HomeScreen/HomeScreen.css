@@ -24,15 +24,14 @@ form {
 }
 
 .account-label {
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.4);
-  text-shadow: 0.5px 0.5px rgba(92, 92, 95, 0.2);
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .account-value {
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.76);
+  color: rgb(255, 246, 113);
   margin-left: auto;
+  text-shadow: 0.7px 0.7px rgba(92, 92, 95, 0.2);
 }
 
 .indicator-container {

@@ -101,10 +101,7 @@ test(
     await emailAddressInput.type('testabc@mailinator.com')
     const submitButton = await page.$('.next-button')
     await submitButton.click()
-    await page.waitForSelector('.request') //necessary to avoid failed delete request next line
-    //src/components/CreateAccount/CreateAccountForms/CreateAccountForm7.js
-    //is temporarily commented out
-    // await page.waitForSelector('.okay-button')
+    await page.waitForSelector('.request')
     const response = await axiosInstance
       .delete('/account/TestAccount')
       .then(res => res.data)

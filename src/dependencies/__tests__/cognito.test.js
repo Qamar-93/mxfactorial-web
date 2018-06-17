@@ -1,11 +1,6 @@
+import { COGNITO_CLIENT_ID } from '../../utilities/envVarsFromDisk'
 jest.mock('../cognito')
-import { Cognito } from '../cognito'
-const mockFunction = jest.fn()
-Cognito.mockImplementation(() => {
-  return {
-    createAccount: mockFunction
-  }
-})
+import * as Cognito from '../cognito'
 import { testProfile } from '../../containers/CreateAccount/CreateAccount'
 
 describe('Cognito client sdk', () => {
@@ -15,8 +10,14 @@ describe('Cognito client sdk', () => {
     Object.keys(profileData).forEach(key => {
       attributeList.push({ Name: `custom:${key}`, Value: testProfile[key] })
     })
-    const cognito = new Cognito(account, password, profileData)
-    const cognitoInstance = cognito.createAccount()
-    expect(mockFunction).toHaveBeenCalled()
+    Cognito.createAccount(account, password, profileData)
+    expect(Cognito.createAccount).toHaveBeenCalled()
+    //TODO: assert on cognito properties
+  })
+
+  it('forms the body of an auth account request', () => {
+    const { account, password } = testProfile
+    Cognito.authAccount(account, password)
+    expect(Cognito.authAccount).toHaveBeenCalled()
   })
 })

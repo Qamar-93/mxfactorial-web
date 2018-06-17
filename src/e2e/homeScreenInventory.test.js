@@ -5,18 +5,24 @@ let browser
 let page
 const waitOpts = { waitUntil: 'load' }
 
-beforeAll(async () => {
+test('1 account label displays', async () => {
   browser = await puppeteer.launch({
     args: ['--no-sandbox']
-    //,headless: false //for visible browser test automation
+    // ,headless: false //for visible browser test automation
   })
   page = await browser.newPage()
-})
-
-test('1 account label displays', async () => {
-  const accountLabelCopy = 'account'
-  await page.goto(BASE_URL + '/account')
+  //begin sign in to access post-auth screens
+  await page.goto(BASE_URL)
+  await page.waitForSelector('.sign-in')
+  const accountInput = await page.$('[name=account]')
+  await accountInput.type('JoeSmith')
+  const passwordInput = await page.$('[name=password]')
+  await passwordInput.type('password')
+  const signInButton = await page.$('.sign-in')
+  await signInButton.click()
   await page.waitForSelector('.add-item')
+  //end sign in
+  const accountLabelCopy = 'account'
   const accountIndicatorHandle = await page.$('.account-label')
   const accountIndicatorHtml = await accountIndicatorHandle.getProperty(
     'innerHTML'
@@ -206,5 +212,13 @@ test('mobile nav button displays inactive default', async () => {
   const testForClass = await classList.filter(
     className => className === classUnderTest
   )
+  //sign out to purge tokens and return to initial state for other tests
+  const hamburgerButton = await page.$('.hamburger')
+  await hamburgerButton.click()
+  await page.waitForSelector('.sign-out-button')
+  const signOutButton = await page.$('.sign-out-button')
+  await signOutButton.click()
+  await page.waitForSelector('.sign-in')
+  //end sign out
   expect(testForClass).toHaveLength(0)
 })

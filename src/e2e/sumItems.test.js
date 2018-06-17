@@ -12,11 +12,20 @@ test(
       args: ['--no-sandbox']
     })
     page = await browser.newPage()
-    await page.goto(BASE_URL + '/account')
+    //begin sign in to access post-auth screens
+    await page.goto(BASE_URL)
+    await page.waitForSelector('.sign-in')
+    const accountInput = await page.$('[name=account]')
+    await accountInput.type('JoeSmith')
+    const passwordInput = await page.$('[name=password]')
+    await passwordInput.type('password')
+    const signInButton = await page.$('.sign-in')
+    await signInButton.click()
     await page.waitForSelector('.add-item')
-    const addItemButton = await page.$('.add-item')
+    //end sign in
     //AVOID: await addItemButton.click({ clickCount })
     //passing clickCount in options object too fast
+    const addItemButton = await page.$('.add-item')
     await addItemButton.click()
     await addItemButton.click()
     await addItemButton.click()
@@ -136,5 +145,13 @@ test('total modified after removing 3 transaction items', async () => {
     return data
   })
   const sumItemDisplayCellNumber = parseInt(sumItemDisplayCell[0])
+  //sign out to purge tokens and return to initial state for other tests
+  const hamburgerButton = await page.$('.hamburger')
+  await hamburgerButton.click()
+  await page.waitForSelector('.sign-out-button')
+  const signOutButton = await page.$('.sign-out-button')
+  await signOutButton.click()
+  await page.waitForSelector('.sign-in')
+  //end sign out
   expect(sumItemDisplayCellNumber).toBe(expectedTotal)
 })

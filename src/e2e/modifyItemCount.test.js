@@ -12,8 +12,17 @@ test(
       args: ['--no-sandbox']
     })
     page = await browser.newPage()
-    await page.goto(BASE_URL + '/account')
+    //begin sign in to access post-auth screens
+    await page.goto(BASE_URL)
+    await page.waitForSelector('.sign-in')
+    const accountInput = await page.$('[name=account]')
+    await accountInput.type('JoeSmith')
+    const passwordInput = await page.$('[name=password]')
+    await passwordInput.type('password')
+    const signInButton = await page.$('.sign-in')
+    await signInButton.click()
     await page.waitForSelector('.add-item')
+    //end sign in
     const addItemButton = await page.$('.add-item')
     //AVOID: await addItemButton.click({ clickCount })
     //passing clickCount in options object too fast
@@ -43,6 +52,14 @@ test('delete transaction items', async () => {
   await removeIcon[2].click()
   const transactionItemSets = await page.$$('.transaction-item-set')
   expect(transactionItemSets).toHaveLength(expectedItemCount)
+  //sign out to purge tokens and return to initial state for other tests
+  const hamburgerButton = await page.$('.hamburger')
+  await hamburgerButton.click()
+  await page.waitForSelector('.sign-out-button')
+  const signOutButton = await page.$('.sign-out-button')
+  await signOutButton.click()
+  await page.waitForSelector('.sign-in')
+  //end sign out
 })
 
 test('selecting add-item button scrolls window down', async () => {
@@ -50,8 +67,17 @@ test('selecting add-item button scrolls window down', async () => {
     args: ['--no-sandbox']
   })
   page = await browser.newPage()
-  await page.goto(BASE_URL + '/account')
+  //begin sign in to access post-auth screens
+  await page.goto(BASE_URL)
+  await page.waitForSelector('.sign-in')
+  const accountInput = await page.$('[name=account]')
+  await accountInput.type('JoeSmith')
+  const passwordInput = await page.$('[name=password]')
+  await passwordInput.type('password')
+  const signInButton = await page.$('.sign-in')
+  await signInButton.click()
   await page.waitForSelector('.add-item')
+  //end sign in
   const addItemButton = await page.$('.add-item')
   let yScrollDiffs = []
   const position0 = await page.evaluate(() => window.scrollY)
@@ -72,4 +98,12 @@ test('selecting add-item button scrolls window down', async () => {
   })
   expect(yScrollDiffs[0]).toBeGreaterThan(200)
   expect(inconsistencyTest).toHaveLength(0)
+  //sign out to purge tokens and return to initial state for other tests
+  const hamburgerButton = await page.$('.hamburger')
+  await hamburgerButton.click()
+  await page.waitForSelector('.sign-out-button')
+  const signOutButton = await page.$('.sign-out-button')
+  await signOutButton.click()
+  await page.waitForSelector('.sign-in')
+  //end sign out
 })

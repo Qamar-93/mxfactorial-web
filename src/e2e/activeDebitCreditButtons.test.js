@@ -10,8 +10,17 @@ test('credit button active', async () => {
     args: ['--no-sandbox']
   })
   page = await browser.newPage()
-  await page.goto(BASE_URL + '/account')
+  //begin sign in to access post-auth screens
+  await page.goto(BASE_URL)
+  await page.waitForSelector('.sign-in')
+  const accountInput = await page.$('[name=account]')
+  await accountInput.type('JoeSmith')
+  const passwordInput = await page.$('[name=password]')
+  await passwordInput.type('password')
+  const signInButton = await page.$('.sign-in')
+  await signInButton.click()
   await page.waitForSelector('.add-item')
+  //end sign in
   const classUnderTest = 'inactive'
   const creditButtonCssClasses = await page.evaluate(() => {
     let data = []
@@ -115,5 +124,13 @@ test('request button and copy displays after switching to active credit button s
 
 test('transact button NOT displayed', async () => {
   const transactButtonList = await page.$$('.transact')
+  //sign out to purge tokens and return to initial state for other tests
+  const hamburgerButton = await page.$('.hamburger')
+  await hamburgerButton.click()
+  await page.waitForSelector('.sign-out-button')
+  const signOutButton = await page.$('.sign-out-button')
+  await signOutButton.click()
+  await page.waitForSelector('.sign-in')
+  //end sign out
   expect(transactButtonList).toHaveLength(0)
 })

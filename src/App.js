@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import './App.css'
 
-import LandingScreen from './components/LandingScreen/LandingScreen'
+import { LandingScreen } from './containers/LandingScreen/LandingScreen'
 import CreateAccount from './containers/CreateAccount/CreateAccount'
 import { HomeScreen } from './containers/HomeScreen/HomeScreen'
 

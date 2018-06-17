@@ -27,3 +27,7 @@
   color: rgb(115, 162, 194);
   text-decoration: none;
 }
+
+.sign-out-button {
+  cursor: pointer;
+}

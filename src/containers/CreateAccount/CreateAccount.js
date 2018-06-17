@@ -14,11 +14,15 @@ import {
   CreateAccountForm3,
   CreateAccountForm4,
   CreateAccountForm5,
-  CreateAccountForm6,
-  CreateAccountForm7
+  CreateAccountForm6
+  // CreateAccountForm7
 } from '../../components/CreateAccount/CreateAccountForms/'
 //using cognitio sdk instead of /account/create api via axios
-import { Cognito } from '../../dependencies/cognito'
+import {
+  authAccount,
+  createAccount,
+  clearCachedCognitoTokens
+} from '../../dependencies/cognito'
 import './CreateAccount.css'
 
 export const resetProfile = {
@@ -96,11 +100,6 @@ export default class CreateAccount extends Component {
     })
   }
 
-  //For testing
-  showState() {
-    console.log(this.state)
-  }
-
   //Changes date input field to text onblur
   handleTypeToText(e) {
     e.currentTarget.type = 'text'
@@ -118,16 +117,33 @@ export default class CreateAccount extends Component {
     })
   }
 
+  //For testing
+  showState() {
+    console.log(this.state)
+  }
+
+  //For testing
+  // showCognito() {
+  //   console.log()
+  // }
+
   handleCreateAccountRequest() {
     //temporary test if keys are present to
     //reduce api requests during development
     if (Object.keys(this.state).length > 19) {
+      //remove previous cached tokens before account creation
+      clearCachedCognitoTokens()
       const { account, password, agrees, ...profileData } = this.state
-      const cognitoInstance = new Cognito(account, password)
-      cognitoInstance.createAccount(profileData).then(
+      createAccount(account, password, profileData).then(
         result => {
-          this.setState(resetProfile)
-          this.props.history.push('/account/create/10')
+          authAccount(account, password).then(token => {
+            if (token) {
+              //show home screen
+              this.setState(resetProfile, () => {
+                this.props.history.push('/account')
+              })
+            }
+          })
         },
         error => {
           alert('Request failed')
@@ -222,11 +238,13 @@ export default class CreateAccount extends Component {
                 onChange={e => this.handleChange(e)}
                 show={() => this.showState()}
                 createAccount={() => this.handleCreateAccountRequest()}
-                populate={() => this.handlePopulateState()}
+                // populate={() => this.handlePopulateState()} //for testing
+                // cognito={() => console.log(localStorage)} //for testing
+                // signOut={() => clearCachedCognitoTokens()} //for testing
               />
             )}
           />
-          <Route
+          {/* <Route
             exact
             path="/account/create/10"
             render={props => (
@@ -237,7 +255,7 @@ export default class CreateAccount extends Component {
               />
             )}
           />
-          <Route component={TermsOfUseCopy1} />
+          <Route component={TermsOfUseCopy1} /> */}
         </Switch>
       </div>
     )

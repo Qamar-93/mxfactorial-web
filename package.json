@@ -17,6 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "loc:cov": "react-scripts test --forceExit --env=jsdom --coverage",
     "ci:start": "start-server-and-test start http://localhost:3000 ci:test",
     "ci:test": "CI=true react-scripts test --forceExit --env=jsdom --coverage",
     "eject": "react-scripts eject",

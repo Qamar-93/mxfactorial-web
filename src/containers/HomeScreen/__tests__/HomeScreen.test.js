@@ -1,12 +1,31 @@
 import React from 'react'
 import { shallow, mount } from 'enzyme'
-
+import { MemoryRouter, Route, Switch } from 'react-router-dom'
 import { HomeScreen } from '../HomeScreen'
+
+let mockStorage = {}
+window.localStorage = {
+  setItem: (key, val) => Object.assign(mockStorage, { [key]: val }),
+  getItem: key => mockStorage[key],
+  clear: () => (mockStorage = {})
+}
 
 describe('Home screen component', () => {
   it('renders', () => {
-    const wrapper = shallow(<HomeScreen />)
-    expect(wrapper.find('main.home-screen-content')).toHaveLength(1)
+    const history = { push: jest.fn() }
+    const container = mount(
+      <MemoryRouter initialEntries={['/account']}>
+        <Switch>
+          <Route
+            component={props => <HomeScreen {...props} history={history} />}
+            path="/account"
+          />
+        </Switch>
+      </MemoryRouter>
+    )
+    const instance = container.instance()
+    instance.setState({ currentAccount: 'someAccount' })
+    expect(container).toHaveLength(1)
   })
 
   it('componentDidMount is called', done => {

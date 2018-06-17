@@ -76,7 +76,7 @@ describe('Mobile nav component', () => {
       wrapper
         //combinator added to accommodate
         //temporary Sign Out button link
-        .find('ul a')
+        .find('.sign-out-button')
         // .childAt(5)
         .text()
     ).toBe(copy)

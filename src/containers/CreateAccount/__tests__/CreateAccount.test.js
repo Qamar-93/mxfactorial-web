@@ -3,14 +3,15 @@ import { mount } from 'enzyme'
 import { MemoryRouter, Route } from 'react-router-dom'
 import CreateAccount from '../CreateAccount'
 import { resetProfile, testProfile } from '../CreateAccount'
-jest.mock('../../../dependencies/cognito')
-import { Cognito } from '../../../dependencies/cognito'
-const mockFunction = jest.fn().mockImplementation(() => Promise.resolve())
-Cognito.mockImplementation(() => {
+
+jest.mock('../../../dependencies/cognito', () => {
   return {
-    createAccount: mockFunction
+    createAccount: jest.fn(() => Promise.resolve()),
+    authAccount: jest.fn(() => Promise.resolve()),
+    clearCachedCognitoTokens: jest.fn()
   }
 })
+import * as Cognito from '../../../dependencies/cognito'
 
 describe('CreateAccount component', () => {
   it('has agrees: false default state', () => {
@@ -94,7 +95,7 @@ describe('CreateAccount component', () => {
     expect(mockEvent.currentTarget.type).toBe(typeAfterHandlerCall)
   })
 
-  it('sends request to create account', async () => {
+  it('sends request to create account', done => {
     const history = { push: jest.fn() }
     const container = mount(
       <MemoryRouter>
@@ -104,7 +105,25 @@ describe('CreateAccount component', () => {
     const instance = container.instance()
     instance.setState(testProfile)
     instance.handleCreateAccountRequest()
-    await expect(mockFunction).toHaveBeenCalled()
-    expect(instance.state).toMatchObject(resetProfile)
+    expect(Cognito.createAccount).toHaveBeenCalled()
+    process.nextTick(() => {
+      expect(Cognito.authAccount).toHaveBeenCalled()
+      done()
+    })
+  })
+
+  it('resets state after creating account', async () => {
+    const history = { push: jest.fn() }
+    const container = mount(
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
+    ).find(CreateAccount)
+    const instance = container.instance()
+    await instance.setState(testProfile)
+    await instance.handleCreateAccountRequest()
+    setTimeout(() => {
+      expect(instance.state).toMatchObject(resetProfile)
+    }, 100)
   })
 })
