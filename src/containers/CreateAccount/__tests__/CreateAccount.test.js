@@ -3,7 +3,20 @@ import { mount } from 'enzyme'
 import { MemoryRouter, Route } from 'react-router-dom'
 import CreateAccount from '../CreateAccount'
 import { resetProfile, testProfile } from '../CreateAccount'
-
+import { shallow } from 'enzyme'
+import {
+  TermsOfUseCopy1,
+  TermsOfUseCopy2,
+  TermsOfUseCopy3
+} from '../../../components/CreateAccount/TermsOfUseCopy/TermsOfUseCopy'
+import {
+  CreateAccountForm1,
+  CreateAccountForm2,
+  CreateAccountForm3,
+  CreateAccountForm4,
+  CreateAccountForm5,
+  CreateAccountForm6
+} from '../../../components/CreateAccount/CreateAccountForms/'
 jest.mock('../../../dependencies/cognito', () => {
   return {
     createAccount: jest.fn(() => Promise.resolve()),
@@ -77,6 +90,7 @@ describe('CreateAccount component', () => {
     expect(mockEvent.currentTarget.type).toBe(typeAfterHandlerCall)
   })
 
+
   it('converts input type to date', () => {
     const history = { push: jest.fn() }
     const typeAfterHandlerCall = 'date'
@@ -125,5 +139,84 @@ describe('CreateAccount component', () => {
     setTimeout(() => {
       expect(instance.state).toMatchObject(resetProfile)
     }, 100)
+  })
+
+  test('Creat account page 1', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/1']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(TermsOfUseCopy1)).toHaveLength(1)
+  })
+  test('Creat account page 2', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/2']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(TermsOfUseCopy2)).toHaveLength(1)
+  })
+  test('Creat account page 4', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/4']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    console.log(wrapper.props().children)
+    expect(wrapper.find(CreateAccountForm1)).toHaveLength(1)
+  })
+  test('Creat account page 5', () => {
+    const mockFn = jest.fn()
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/5']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(CreateAccountForm2)).toHaveLength(1)
+  })
+  test('Creat account page 6', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/6']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(CreateAccountForm3)).toHaveLength(1)
+  })
+  test('Creat account page 7', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/7']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(CreateAccountForm4)).toHaveLength(1)
+  })
+  test('Creat account page 8', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/8']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(CreateAccountForm5)).toHaveLength(1)
+  })
+  test('Creat account page 9', () => {
+    const wrapper = mount(
+      <MemoryRouter initialEntries={['/account/create/9']}>
+        <CreateAccount />
+      </MemoryRouter>
+    )
+    expect(wrapper.find(CreateAccountForm6)).toHaveLength(1)
+  })
+  it('Handle populate State function', () => {
+    const history = { push: jest.fn() }
+    const agreesValue = true
+    const container = mount(
+      <MemoryRouter>
+        <CreateAccount history={history} />
+      </MemoryRouter>
+    ).find(CreateAccount)
+    const instance = container.instance()
+    instance.handlePopulateState()
+    expect(instance.state.agrees).toBe(agreesValue)
   })
 })
