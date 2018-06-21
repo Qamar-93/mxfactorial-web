@@ -90,7 +90,6 @@ describe('CreateAccount component', () => {
     expect(mockEvent.currentTarget.type).toBe(typeAfterHandlerCall)
   })
 
-
   it('converts input type to date', () => {
     const history = { push: jest.fn() }
     const typeAfterHandlerCall = 'date'
@@ -163,7 +162,6 @@ describe('CreateAccount component', () => {
         <CreateAccount />
       </MemoryRouter>
     )
-    console.log(wrapper.props().children)
     expect(wrapper.find(CreateAccountForm1)).toHaveLength(1)
   })
   test('Creat account page 5', () => {
